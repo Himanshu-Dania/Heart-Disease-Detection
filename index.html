@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heart Disease Prediction</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Heart Disease Prediction</h1>
+    <form id="predict-form">
+        <label for="age">Age:</label><br>
+        <input type="number" id="age" name="age"><br>
+        <label for="sex">Sex:</label><br>
+        <select id="sex" name="sex">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select><br>
+        <label for="chestPainType">Chest Pain Type:</label><br>
+        <select id="chestPainType" name="chestPainType">
+            <option value="Typical angina">Typical angina</option>
+            <option value="Atypical angina">Atypical angina</option>
+            <option value="Non-anginal pain">Non-anginal pain</option>
+            <option value="Asymptomatic">Asymptomatic</option>
+        </select><br>
+        <label for="restingBP">Resting Blood Pressure:</label><br>
+        <input type="number" id="restingBP" name="restingBP"><br>
+        <label for="cholesterol">Cholesterol:</label><br>
+        <input type="number" id="cholesterol" name="cholesterol"><br>
+        <label for="fastingBS">Fasting Blood Sugar:</label><br>
+        <input type="number" id="fastingBS" name="fastingBS"><br>
+        <label for="maxHR">Maximum Heart Rate:</label><br>
+        <input type="number" id="maxHR" name="maxHR"><br>
+        <label for="exerciseAngina">Exercise Induced Angina:</label><br>
+        <select id="exerciseAngina" name="exerciseAngina">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select><br>
+        <input type="submit" value="Predict">
+    </form>
+    <p id="prediction"></p>
+
+    <script>
+        $("#predict-form").submit(function(event) {
+            event.preventDefault();
+            var data = {
+                'Age': parseInt($("#age").val()),
+                'Sex': $("#sex").val(),
+                'ChestPainType': $("#chestPainType").val(),
+                'RestingBP': parseInt($("#restingBP").val()),
+                'Cholesterol': parseInt($("#cholesterol").val()),
+                'FastingBS': parseInt($("#fastingBS").val()),
+                'MaxHR': parseInt($("#maxHR").val()),
+                'ExerciseAngina': $("#exerciseAngina").val()
+            };
+            $.ajax({
+                url: '/predict',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+                    $("#prediction").text('Prediction: ' + response.prediction);
+                },
+                error: function(response) {
+                    $("#prediction").text('Error: ' + response.responseJSON.error);
+                }
+            });
+        });
+        
+    </script>
+</body>
+</html>
